@@ -27,8 +27,8 @@ static NSImage *runningIcon = nil;
 	[[WMDashboardManager sharedManager] refresh];
 	[manager scan];
 	
-	NSString *format = NSLocalizedStringFromTableInBundle( @"%d installed, %d enabled.", nil, [NSBundle bundleForClass:[self class]], @"" );
-	[widgetCount setStringValue:[NSString stringWithFormat:format, [manager widgetsCount], [manager enabledWidgetsCount]]];
+	NSString *format = NSLocalizedStringFromTableInBundle( @"%ld installed, %ld enabled.", nil, [NSBundle bundleForClass:[self class]], @"" );
+	[widgetCount setStringValue:[NSString stringWithFormat:format, (long)[manager widgetsCount], (long)[manager enabledWidgetsCount]]];
 	[tableView reloadData];
 		
 	if ( [tableView selectedRow] != -1 )
@@ -67,7 +67,7 @@ static NSImage *runningIcon = nil;
 
 - (IBAction)openSelected:(id)sender;
 {
-	int row = [tableView selectedRow];
+	NSInteger row = [tableView selectedRow];
 	
 	if ( row >= 0 )
 	{
@@ -78,7 +78,7 @@ static NSImage *runningIcon = nil;
 
 - (IBAction)revealSelected:(id)sender;
 {
-	int row = [tableView selectedRow];
+	NSInteger row = [tableView selectedRow];
 	
 	if ( row >= 0 )
 	{
@@ -89,7 +89,7 @@ static NSImage *runningIcon = nil;
 
 - (IBAction)disableOrEnableSelected:(id)sender;
 {
-	int row = [tableView selectedRow];
+	NSInteger row = [tableView selectedRow];
 	
 	if ( row >= 0 )
 	{
@@ -111,7 +111,7 @@ static NSImage *runningIcon = nil;
 
 - (IBAction)removeSelected:(id)sender;
 {
-	int row = [tableView selectedRow];
+	NSInteger row = [tableView selectedRow];
 	
 	if ( row >= 0 )
 	{
@@ -140,11 +140,6 @@ functionality here in the future. */
 - (IBAction)getSupport:(id)sender;
 {
 	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://www.downtownsoftwarehouse.com/software/WidgetManager/support/"]];
-}
-
-- (IBAction)sendDonation:(id)sender;
-{
-	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://s1.amazon.com/exec/varzea/pay/T99PU9SW0R7ZF"]];
 }
 
 - (IBAction)sendFeedback:(id)sender;
@@ -212,10 +207,10 @@ functionality here in the future. */
 	runningIcon = [[NSImage alloc] initWithContentsOfFile:[[NSBundle bundleForClass:self] pathForResource:@"RunningWidget" ofType:@"tiff"]];
 }
 
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem;
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem;
 {
 	SEL selector = [menuItem action];
-	int row = [tableView selectedRow];
+	NSInteger row = [tableView selectedRow];
 	WMWidget *widget = ( row != -1 ) ? [[[WMManager sharedManager] widgets] objectAtIndex:row] : nil;
 	
 	if ( selector == @selector(openSelected:) )
@@ -230,15 +225,15 @@ functionality here in the future. */
 
 #pragma mark NSTableView Data Source Methods
 
-- (int)numberOfRowsInTableView: (NSTableView *)table
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView;
 {
 	return [[[WMManager sharedManager] widgets] count];
 }
 
-- (id)tableView:(NSTableView *)table objectValueForTableColumn:(NSTableColumn *)column row:(int)row
+- (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex;
 {
-	WMWidget *widget = [[[WMManager sharedManager] widgets] objectAtIndex:row];
-	NSString *identifier = [column identifier];
+	WMWidget *widget = [[[WMManager sharedManager] widgets] objectAtIndex:rowIndex];
+	NSString *identifier = [aTableColumn identifier];
 	
 	if ( [identifier isEqualToString:@"enabled"] )
 	{
@@ -272,7 +267,7 @@ functionality here in the future. */
 
 - (void)tableViewSelectionDidChange:(NSNotification *)notification
 {
-	int row = [tableView selectedRow];
+	NSInteger row = [tableView selectedRow];
 	BOOL enabled = NO;
 	NSImage *image = nil;
 	NSString *name = @"";
@@ -317,7 +312,7 @@ functionality here in the future. */
 	[view reloadData];
 }
 
-- (NSString *)tableView:(NSTableView *)aTableView toolTipForCell:(NSCell *)aCell rect:(NSRectPointer)rect tableColumn:(NSTableColumn *)aTableColumn row:(int)row mouseLocation:(NSPoint)mouseLocation
+- (NSString *)tableView:(NSTableView *)aTableView toolTipForCell:(NSCell *)aCell rect:(NSRectPointer)rect tableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)row mouseLocation:(NSPoint)mouseLocation;
 {
 	NSString *identifier = [aTableColumn identifier];
 	WMWidget *widget = [[[WMManager sharedManager] widgets] objectAtIndex:row];
@@ -343,7 +338,7 @@ functionality here in the future. */
 	return toolTip;
 }
 
-- (NSDragOperation)tableView:(NSTableView *)view validateDrop:(id <NSDraggingInfo>)info proposedRow:(int)row proposedDropOperation:(NSTableViewDropOperation)operation;
+- (NSDragOperation)tableView:(NSTableView *)aTableView validateDrop:(id < NSDraggingInfo >)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)operation;
 {
 	NSDragOperation acceptDrop = NSDragOperationNone;
 	NSPasteboard *pboard;
@@ -362,7 +357,7 @@ functionality here in the future. */
 			if ( [[fileName pathExtension] caseInsensitiveCompare:@"wdgt"] == NSOrderedSame ||
 				 [[fileName pathExtension] caseInsensitiveCompare:@"disabled"] == NSOrderedSame )
 			{
-				[view setDropRow:row dropOperation:NSTableViewDropAbove];
+				[aTableView setDropRow:row dropOperation:NSTableViewDropAbove];
 				acceptDrop = NSDragOperationCopy;
 				break;
 			}
@@ -372,7 +367,8 @@ functionality here in the future. */
 	return acceptDrop;
 }
 
-- (BOOL)tableView:(NSTableView *)view acceptDrop:(id <NSDraggingInfo>)info row:(int)row dropOperation:(NSTableViewDropOperation)operation;
+- (BOOL)tableView:(NSTableView *)aTableView acceptDrop:(id < NSDraggingInfo >)info row:(NSInteger)row dropOperation:(NSTableViewDropOperation)operation;
+
 {
 	NSPasteboard *pboard = [info draggingPasteboard]; 
 	

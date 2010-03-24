@@ -25,8 +25,8 @@
 - (void)installWidget:(WMWidget *)widget;
 - (void)removeWidget:(WMWidget *)widget;
 
-- (int)widgetsCount;
-- (int)enabledWidgetsCount;
+- (NSInteger)widgetsCount;
+- (NSInteger)enabledWidgetsCount;
 
 - (NSArray *)widgets;
 - (NSPredicate *)filter;

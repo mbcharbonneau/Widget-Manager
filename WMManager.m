@@ -154,7 +154,7 @@ static AuthorizationRef authorizationRef = NULL;
 	{
 		NSArray *files = [NSArray arrayWithObject:[filePath lastPathComponent]];
 		NSString *folder = [filePath stringByDeletingLastPathComponent];
-		int tag;
+		NSInteger tag;
 		
 		result = [[NSWorkspace sharedWorkspace] performFileOperation:NSWorkspaceRecycleOperation source:folder destination:@"" files:files tag:&tag];	
 	}
@@ -168,12 +168,12 @@ static AuthorizationRef authorizationRef = NULL;
 	}
 }
 
-- (int)widgetsCount;
+- (NSInteger)widgetsCount;
 {
 	return [[self widgets] count];
 }
 
-- (int)enabledWidgetsCount;
+- (NSInteger)enabledWidgetsCount;
 {
 	NSPredicate *filter = [NSPredicate predicateWithFormat:@"SELF.isEnabled == TRUE"];
 	NSArray *array = [[self widgets] filteredArrayUsingPredicate:filter];
@@ -261,7 +261,7 @@ static AuthorizationRef authorizationRef = NULL;
 	{
 		NSArray *contents = [[NSFileManager defaultManager] directoryContentsAtPath:searchPath];
 		NSString *filename;
-		int index;
+		NSInteger index;
 		
 		for ( index = 0; index < [contents count]; index++ )
 		{

@@ -33,7 +33,6 @@
 
 - (IBAction)openWebsite:(id)sender;
 - (IBAction)getSupport:(id)sender;
-- (IBAction)sendDonation:(id)sender;
 - (IBAction)sendFeedback:(id)sender;
 
 @end

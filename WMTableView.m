@@ -14,7 +14,7 @@
 - (NSMenu *)menuForEvent:(NSEvent *)theEvent;
 {
 	NSPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-	int row = [self rowAtPoint:point];
+	NSInteger row = [self rowAtPoint:point];
 	
 	if ( row != -1 )
 	{
